@@ -24,7 +24,7 @@ class SSMQ {
 	/**
 	 * @var SSMQ
 	 */
-	private $instance;
+	private static $instance;
 	
 	/**
 	 * Private constructor, factory is Singleton
@@ -35,6 +35,11 @@ class SSMQ {
 	
 	public static function getInstance() {
 		
+		if (empty(self::$instance)) {
+			self::$instance = new self();
+		}
+		
+		return self::$instance;
 	}
 	
 	/**
@@ -42,8 +47,15 @@ class SSMQ {
 	 * @param string $sQueue queue name
 	 * @param string $sQueueType queue type, if not specified, default will be used
 	 * @return Base
+	 * 
+	 * TODO: choose type of queue engine
 	 */
 	public function create($sQueue, $sQueueType = null) {
 		
+		if (empty($this->aQueues[$sQueue])) {
+			$this->aQueues[$sQueue] = new MySqlQueue($sQueue);
+		}
+		
+		return $this->aQueues[$sQueue];
 	}
 }
