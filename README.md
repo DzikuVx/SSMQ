@@ -3,6 +3,15 @@ SSMQ
 
 Simple (via) Sql Messaging Queue
 
+##Instalation
+
+Almost no installation required. All you need is:
+* Ensure you have PHP5 and MySQL
+* create MySQL user and database
+* execute `ssms-create.sql` to create required tables
+
+And that's all, SSMQ ready to use
+
 ##Example usage
 
 ###Set db access and obtain queue object

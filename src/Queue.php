@@ -2,9 +2,24 @@
 namespace SSMQ;
 
 class Message {
-	public $message;
-	public $attributes;
-	public $recipient;
+    /**
+     * @var string
+     */
+    public $message;
+    /**
+     * @var \stdClass
+     */
+    public $attributes;
+    /**
+     * @var string
+     */
+    public $recipient;
+}
+
+interface Connector {
+    function push($sMessage, $sRecipient = null, $aAttributes = null);
+    function pop($sRecipient = null);
+    function truncate();
 }
 
 abstract class Base {
@@ -19,14 +34,16 @@ abstract class Base {
 	 * @param string $sMessage
 	 * @param string $sRecipient
 	 * @param array $aAttributes
+     * @return Base
 	 */
-	public function push($sMessage, $sRecipient = null, $aAttributes = null) {
+	public function push(/** @noinspection PhpUnusedParameterInspection */
+        $sMessage, $sRecipient = null, $aAttributes = null) {
 
 		return $this;
 	}
 	
 	/**
-	 * Memthod returns first message from queue mathing recipient
+	 * Method returns first message from queue mathing recipient
 	 * @param string $sRecipient
 	 * @return Message
 	 */
@@ -39,7 +56,7 @@ abstract class Base {
 	}
 }
 
-class MySqlQueue extends Base {
+class MySqlQueue extends Base implements Connector {
 	/**
 	 * @var string
 	 */
@@ -112,11 +129,13 @@ class MySqlQueue extends Base {
 		$this->getQueueId();
 	}
 
-	/**
-	 * (non-PHPdoc)
-	 * @see SSMQ.Base::push()
-	 */
-	public function push($sMessage, $sRecipient = null, $aAttributes = null) {
+    /**
+     * @param string $sMessage
+     * @param null $sRecipient
+     * @param null $aAttributes
+     * @return $this|Base
+     */
+    public function push($sMessage, $sRecipient = null, $aAttributes = null) {
 		
 		if (!empty($sRecipient)) {
 			$sRecipient = "'" . $sRecipient . "'";
@@ -144,12 +163,12 @@ class MySqlQueue extends Base {
 		
 		return $this;
 	}
-	
-	/**
-	 * (non-PHPdoc)
-	 * @see SSMQ.Base::pop()
-	 */
-	public function pop($sRecipient = null) {
+
+    /**
+     * @param null $sRecipient
+     * @return null|Message
+     */
+    public function pop($sRecipient = null) {
 		
 		$retVal 	= null;
 		$iMessageId = null;
@@ -192,5 +211,13 @@ class MySqlQueue extends Base {
 		
 		return $retVal;
 	}
+
+    /**
+     * @return MySqlQueue $this
+     */
+    public function truncate() {
+        self::$dbConnection->query("DELETE FROM `messages` WHERE idqueues = {$this->queueId}");
+        return $this;
+    }
 	
 }
