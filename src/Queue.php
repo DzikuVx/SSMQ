@@ -22,7 +22,7 @@ interface Connector {
     function truncate();
 }
 
-abstract class Base {
+abstract class Base implements Connector{
 	
 	/**
 	 * @var string
@@ -43,14 +43,18 @@ abstract class Base {
 	}
 	
 	/**
-	 * Method returns first message from queue mathing recipient
+	 * Method returns first message from queue matching recipient
 	 * @param string $sRecipient
 	 * @return Message
 	 */
 	public function pop($sRecipient = null) {
 		
 	}
-	
+
+    public function truncate() {
+
+    }
+
 	public function __construct($sName) {
 		$this->sQueueName = $sName;	
 	}

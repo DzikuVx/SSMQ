@@ -2,15 +2,19 @@
 
 namespace SSMQ\tests;
 
+use SSMQ\MySqlQueue;
+use SSMQ\SSMQ;
+
+/** @noinspection PhpIncludeInspection */
 require_once 'SSMQ.php';
 
-\SSMQ\MySqlQueue::setCredentials('localhost', 'ssmq', 'ssmq', 'ssmq');
+MySqlQueue::setCredentials('localhost', 'ssmq', 'ssmq', 'ssmq');
 
 class SSMQTest extends \PHPUnit_Framework_TestCase {
 
     public function testMysqlConnector() {
 
-        $oFactory = \SSMQ\SSMQ::getInstance();
+        $oFactory = SSMQ::getInstance();
         $this->assertInstanceOf('\SSMQ\SSMQ', $oFactory);
 
         $oQueue = $oFactory->create('queueA');

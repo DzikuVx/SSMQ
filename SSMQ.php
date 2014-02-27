@@ -14,7 +14,8 @@ class SSMQ {
 	/**
 	 * @var string
 	 */
-	private $sQueueType = 'mysql';
+	private /** @noinspection PhpUnusedPrivateFieldInspection */
+        $sQueueType = 'mysql';
 	
 	/**
 	 * @var array
@@ -50,7 +51,8 @@ class SSMQ {
 	 * 
 	 * TODO: choose type of queue engine
 	 */
-	public function create($sQueue, $sQueueType = null) {
+	public function create($sQueue, /** @noinspection PhpUnusedParameterInspection */
+                           $sQueueType = null) {
 		
 		if (empty($this->aQueues[$sQueue])) {
 			$this->aQueues[$sQueue] = new MySqlQueue($sQueue);
